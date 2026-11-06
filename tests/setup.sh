@@ -77,7 +77,7 @@ git -C "$R" -c user.name=test -c user.email=test@example.com commit -qm "Version
 cp -R "$T" "$W/wp-content/themes/"
 wp theme activate e2e-theme > /dev/null
 
-cp -R "$ROOT/git-auto-deploy" "$W/wp-content/plugins/"
+cp -R "$ROOT/plugin/git-auto-deploy" "$W/wp-content/plugins/"
 wp plugin activate git-auto-deploy > /dev/null
 
 echo "Test site ready in $W (theme e2e-theme active, Git Auto Deploy $(wp plugin get git-auto-deploy --field=version) active)."

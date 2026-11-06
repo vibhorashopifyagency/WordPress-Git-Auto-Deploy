@@ -1,5 +1,5 @@
 # Checks for this repository. (The deploy workflow for your own site is in
-# github-actions/workflows/deploy-theme.yml; see the README.)
+# workflow/deploy-theme.yml; see the README.)
 name: CI
 
 on:
@@ -28,10 +28,10 @@ jobs:
           coverage: none
 
       - name: Lint plugin PHP
-        run: find git-auto-deploy -name '*.php' -print0 | xargs -0 -n1 php -l
+        run: find plugin -name '*.php' -print0 | xargs -0 -n1 php -l
 
       - name: Check shell scripts
-        run: shellcheck github-actions/scripts/git-auto-deploy.sh tests/*.sh
+        run: shellcheck workflow/git-auto-deploy.sh tests/*.sh
 
   e2e:
     name: End-to-end deploys and rollbacks

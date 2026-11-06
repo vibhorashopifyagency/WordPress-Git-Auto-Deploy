@@ -2,6 +2,15 @@
 
 Notable changes to Git Auto Deploy. Versions follow [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+- Documentation rewritten for beginners: a short README with a 5-step setup that can be done
+  in the browser, and separate guides in `docs/` (setup, everyday use, troubleshooting, how it
+  works, reference, glossary).
+- Clearer folders: `plugin/` (the WordPress plugin), `workflow/` (the files users copy into
+  their repository), `docs/`, `tests/`, each with its own short README. Added CONTRIBUTING.md.
+- No changes to how the plugin or the workflow work.
+
 ## 1.0.0 — 2026-11-06
 
 First public release.

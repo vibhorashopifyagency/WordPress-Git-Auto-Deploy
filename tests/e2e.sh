@@ -19,7 +19,8 @@ PORT="${PORT:-8899}"
 W="$WORK/wordpress"
 R="$WORK/repo"
 OUT="$WORK/out.json"
-SCRIPT="$ROOT/github-actions/scripts/git-auto-deploy.sh"
+SCRIPT="$ROOT/workflow/git-auto-deploy.sh"
+VERSION="$(sed -n 's/^ \* Version: *//p' "$ROOT/plugin/git-auto-deploy/git-auto-deploy.php")"
 THEMES="$W/wp-content/themes"
 BASE="$W/wp-content/git-auto-deploy"
 MU="$W/wp-content/mu-plugins"
@@ -113,7 +114,7 @@ echo "== ping"
 send ping
 check "ping answers 200" test $? = 0
 check "ping reports the active theme" says '"theme": *"e2e-theme"'
-check "ping reports the plugin version" says '"plugin": *"1\.0\.0"'
+check "ping reports the plugin version" says "\"plugin\": *\"$VERSION\""
 
 echo "== deploy a new version (theme in a subfolder of the repository)"
 commit '<!doctype html><html><body><h1>version two</h1></body></html>' "Version two"

@@ -15,5 +15,5 @@ Security fixes go into the latest release only.
 
 ## How deploys are protected
 
-See [Security](README.md#security) in the README: what is signed, what the plugin checks in
-every zip, and what someone holding the deploy secret can do.
+See [Security](docs/how-it-works.md#security) in the guide: what is signed, what the plugin
+checks in every zip, and what someone holding the deploy secret can do.
