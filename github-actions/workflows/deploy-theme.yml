@@ -1,0 +1,123 @@
+# ------------------------------------------------------------------------------------
+# WordPress Git Auto Deploy
+# https://github.com/vibhorashopifyagency/wordpressgitautodeploy
+#
+# Deploys a WordPress theme to a live site after every push. The Git Auto Deploy plugin
+# on the site receives the theme zip, keeps a backup, swaps the theme in, checks the
+# home page and rolls back by itself if it breaks. Only theme files are sent; the
+# database (posts, pages, orders, settings) is never touched.
+#
+# Install:  copy this file to   .github/workflows/deploy-theme.yml
+#           copy the script to  .github/scripts/git-auto-deploy.sh
+# Secrets:  repository Settings -> Secrets and variables -> Actions, add
+#           GIT_AUTO_DEPLOY_URL     https://your-site.com   (exactly as WordPress uses it)
+#           GIT_AUTO_DEPLOY_SECRET  the secret from wp-admin -> Tools -> Git Auto Deploy
+#
+# Edit every line marked CHANGE. Full guide: the README at the link above.
+# ------------------------------------------------------------------------------------
+name: Deploy theme
+
+on:
+  push:
+    branches: [main]                        # CHANGE if you deploy from another branch
+    paths:
+      - 'wp-content/themes/your-theme/**'   # CHANGE to THEME_DIR + '/**'  (use '**' if the repo is the theme)
+  workflow_dispatch:                        # adds a "Run workflow" button in the Actions tab
+
+# One deploy at a time; a newer push waits for the running one instead of cancelling it mid-swap.
+concurrency:
+  group: deploy-live
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Lint, deploy, smoke-test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # CHANGE: the theme's folder name on the server, wp-content/themes/<THEME_SLUG>.
+      # wp-admin -> Tools -> Git Auto Deploy shows it. If it is not the site's active theme,
+      # also add to the site's wp-config.php:
+      #   define( 'GIT_AUTO_DEPLOY_THEME', 'your-theme' );
+      THEME_SLUG: your-theme
+      # CHANGE: where the theme sits in this repository ('.' if the repository is the theme).
+      THEME_DIR: wp-content/themes/your-theme
+      # CHANGE: pages that must load after a deploy, separated by spaces.
+      SMOKE_PATHS: / /contact/
+      # CHANGE: the live server's PHP version (cPanel -> MultiPHP Manager).
+      PHP_VERSION: '8.2'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up PHP (same version as the live server)
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+
+      - name: Lint theme PHP
+        run: |
+          status=0
+          while IFS= read -r -d '' file; do
+            out="$(php -l "$file" 2>&1)" || { echo "$out"; status=1; }
+          done < <(git ls-files -z -- "$THEME_DIR/*.php")
+          [ "$status" = 0 ] && echo "All theme PHP files parse on PHP $PHP_VERSION."
+          exit "$status"
+
+      - name: Check deploy secrets
+        id: secrets
+        env:
+          GIT_AUTO_DEPLOY_URL: ${{ secrets.GIT_AUTO_DEPLOY_URL }}
+          GIT_AUTO_DEPLOY_SECRET: ${{ secrets.GIT_AUTO_DEPLOY_SECRET }}
+        run: |
+          if [ -n "$GIT_AUTO_DEPLOY_URL" ] && [ -n "$GIT_AUTO_DEPLOY_SECRET" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::Nothing was deployed: add the GIT_AUTO_DEPLOY_URL and GIT_AUTO_DEPLOY_SECRET repository secrets."
+          fi
+
+      - name: Build theme zip
+        if: steps.secrets.outputs.ready == 'true'
+        run: |
+          tree="${THEME_DIR#./}"
+          if [ "$tree" = "." ]; then tree=""; fi
+          # git archive packs exactly the pushed commit: committed files only, no .git, no local junk.
+          git archive --format=zip --prefix="$THEME_SLUG/" -o theme.zip "HEAD:$tree"
+          ls -lh theme.zip
+
+      - name: Deploy to live site
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          GIT_AUTO_DEPLOY_URL: ${{ secrets.GIT_AUTO_DEPLOY_URL }}
+          GIT_AUTO_DEPLOY_SECRET: ${{ secrets.GIT_AUTO_DEPLOY_SECRET }}
+        run: bash .github/scripts/git-auto-deploy.sh deploy theme.zip
+
+      - name: Smoke-test live pages
+        id: smoke
+        if: steps.secrets.outputs.ready == 'true'
+        env:
+          GIT_AUTO_DEPLOY_URL: ${{ secrets.GIT_AUTO_DEPLOY_URL }}
+        run: |
+          fail=0
+          for path in $SMOKE_PATHS; do
+            url="${GIT_AUTO_DEPLOY_URL%/}${path}?git_auto_deploy_smoke=${GITHUB_RUN_ID}"
+            code="$(curl -sS -L -o page.html -w '%{http_code}' --max-time 30 "$url")" || code="000"
+            if [ "$code" != 200 ] || grep -q 'There has been a critical error' page.html || ! grep -q '</html>' page.html; then
+              echo "::error::$path returned HTTP $code or a broken page"
+              fail=1
+            else
+              echo "OK  $code  $path"
+            fi
+          done
+          exit "$fail"
+
+      - name: Roll back (smoke test failed)
+        if: failure() && steps.smoke.outcome == 'failure'
+        env:
+          GIT_AUTO_DEPLOY_URL: ${{ secrets.GIT_AUTO_DEPLOY_URL }}
+          GIT_AUTO_DEPLOY_SECRET: ${{ secrets.GIT_AUTO_DEPLOY_SECRET }}
+        run: bash .github/scripts/git-auto-deploy.sh rollback
