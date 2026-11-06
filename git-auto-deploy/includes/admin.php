@@ -7,7 +7,7 @@
 defined( 'ABSPATH' ) || exit;
 
 const GIT_AUTO_DEPLOY_PAGE = 'git-auto-deploy';
-const GIT_AUTO_DEPLOY_DOCS = 'https://github.com/vibhorashopifyagency/wordpressgitautodeploy#readme';
+const GIT_AUTO_DEPLOY_DOCS = 'https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy#readme';
 
 add_action(
 	'admin_menu',
