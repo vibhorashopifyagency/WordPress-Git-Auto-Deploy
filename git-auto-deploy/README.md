@@ -4,7 +4,7 @@ Deploys your WordPress theme from GitHub on every push, with an automatic rollba
 new code breaks the site.
 
 Full setup guide, the GitHub Actions workflow and the source:
-https://github.com/vibhorashopifyagency/wordpressgitautodeploy
+https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy
 
 ## What it does
 

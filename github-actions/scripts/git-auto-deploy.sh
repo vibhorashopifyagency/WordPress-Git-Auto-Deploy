@@ -10,7 +10,7 @@
 #   GIT_AUTO_DEPLOY_SECRET  the secret shown in wp-admin → Tools → Git Auto Deploy
 #
 # Works with macOS bash 3.2 too, so it can be run from a laptop.
-# Part of WordPress Git Auto Deploy: https://github.com/vibhorashopifyagency/wordpressgitautodeploy
+# Part of WordPress Git Auto Deploy: https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy
 set -euo pipefail
 
 action="${1:-}"

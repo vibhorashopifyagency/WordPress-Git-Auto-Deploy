@@ -1,6 +1,6 @@
 # ------------------------------------------------------------------------------------
 # WordPress Git Auto Deploy
-# https://github.com/vibhorashopifyagency/wordpressgitautodeploy
+# https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy
 #
 # Deploys a WordPress theme to a live site after every push. The Git Auto Deploy plugin
 # on the site receives the theme zip, keeps a backup, swaps the theme in, checks the

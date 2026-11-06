@@ -1,6 +1,6 @@
 # WordPress Git Auto Deploy
 
-[![CI](https://github.com/vibhorashopifyagency/wordpressgitautodeploy/actions/workflows/ci.yml/badge.svg)](https://github.com/vibhorashopifyagency/wordpressgitautodeploy/actions/workflows/ci.yml)
+[![CI](https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy/actions/workflows/ci.yml/badge.svg)](https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy/actions/workflows/ci.yml)
 
 **Push to GitHub, and the theme on your live WordPress site updates itself. If the new code
 breaks the site, the previous version goes back automatically.**
@@ -66,7 +66,7 @@ settings) is never touched.
 The deploy workflow sits in `github-actions/`, not `.github/`, on purpose: in `.github/` it
 would try to deploy from this repository too.
 
-[Releases]: https://github.com/vibhorashopifyagency/wordpressgitautodeploy/releases/latest
+[Releases]: https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy/releases/latest
 
 ## How it works
 
@@ -239,9 +239,9 @@ repository:
 ```sh
 mkdir -p .github/workflows .github/scripts
 curl -fsSL -o .github/workflows/deploy-theme.yml \
-  https://raw.githubusercontent.com/vibhorashopifyagency/wordpressgitautodeploy/v1.0.0/github-actions/workflows/deploy-theme.yml
+  https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/v1.0.0/github-actions/workflows/deploy-theme.yml
 curl -fsSL -o .github/scripts/git-auto-deploy.sh \
-  https://raw.githubusercontent.com/vibhorashopifyagency/wordpressgitautodeploy/v1.0.0/github-actions/scripts/git-auto-deploy.sh
+  https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/v1.0.0/github-actions/scripts/git-auto-deploy.sh
 ```
 
 Then edit the lines marked `CHANGE` in `deploy-theme.yml`:
