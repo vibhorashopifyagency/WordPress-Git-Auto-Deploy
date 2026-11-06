@@ -1,0 +1,45 @@
+# Pushing a tag like v1.0.0 builds git-auto-deploy.zip and publishes it as a GitHub release.
+# The tag must match the Version in git-auto-deploy/git-auto-deploy.php, and CHANGELOG.md
+# needs a "## 1.0.0" section; its text becomes the release notes.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check the tag matches the plugin version
+        run: |
+          version="$(sed -n 's/^ \* Version: *//p' git-auto-deploy/git-auto-deploy.php)"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match the plugin's Version: $version"
+            exit 1
+          fi
+          echo "VERSION=$version" >> "$GITHUB_ENV"
+
+      - name: Build the plugin zip
+        run: |
+          zip -r git-auto-deploy.zip git-auto-deploy -x '*.DS_Store'
+          unzip -l git-auto-deploy.zip
+
+      - name: Write the release notes from CHANGELOG.md
+        run: |
+          awk -v v="$VERSION" '/^## /{ if (found) exit; if (index($0, "## " v) == 1) found = 1; next } found' CHANGELOG.md > notes.md
+          if [ ! -s notes.md ]; then
+            echo "::error::CHANGELOG.md has no '## $VERSION' section"
+            exit 1
+          fi
+          cat notes.md
+
+      - name: Publish the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" git-auto-deploy.zip --title "Git Auto Deploy $VERSION" --notes-file notes.md
