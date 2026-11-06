@@ -167,7 +167,9 @@ mkdir -p "$MU"
 echo "<?php define( 'GIT_AUTO_DEPLOY_THEME', '../plugins' );" > "$MU/test-theme-constant.php"
 listing "$THEMES" > "$WORK/themes-before.txt"
 listing "$W/wp-content/plugins" > "$WORK/plugins-before.txt"
-zip_as e2e-theme HEAD
+# Version one, never sent before: the fatal deploy above sent the same commit with HEAD's zip,
+# and on a fast machine an identical request in the same second is (rightly) refused as a replay.
+zip_as e2e-theme HEAD~3
 deploy
 check "deploy refused" says 'No valid theme folder name'
 check "themes folder untouched" same_list "$THEMES" "$WORK/themes-before.txt"
