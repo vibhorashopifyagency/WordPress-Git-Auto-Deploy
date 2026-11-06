@@ -26,6 +26,10 @@ MU="$W/wp-content/mu-plugins"
 
 wp() { "$PHP" "$WORK/dl/wp-cli.phar" --path="$W" "$@" 2> /dev/null; }
 
+# The deploy script takes the commit from GITHUB_SHA when it is set. On GitHub Actions that is
+# this repository's commit, not the test repository's, so leave it to `git rev-parse HEAD`.
+unset GITHUB_SHA
+
 export GIT_AUTO_DEPLOY_URL="http://127.0.0.1:$PORT"
 GIT_AUTO_DEPLOY_SECRET="$(wp option get git_auto_deploy_secret)"
 export GIT_AUTO_DEPLOY_SECRET
