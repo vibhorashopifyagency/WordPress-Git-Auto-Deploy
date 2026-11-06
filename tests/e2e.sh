@@ -32,6 +32,16 @@ export GIT_AUTO_DEPLOY_SECRET
 
 pass=0
 fail=0
+
+# On GitHub Actions, failures also become annotations: they show on the run's summary page
+# and can be read through the API without signing in, unlike the full log.
+annotate() { # annotate <title> <text>
+  [ "${GITHUB_ACTIONS:-}" = true ] || return 0
+  local msg
+  msg="$(printf '%s' "$2" | tail -c 1500 | sed -e 's/%/%25/g' -e 's/\r/%0D/g' | awk '{ printf "%s%%0A", $0 }')"
+  echo "::error title=$1::$msg"
+}
+
 check() { # check "<what should be true>" <command...>
   local name="$1"
   shift
@@ -41,6 +51,7 @@ check() { # check "<what should be true>" <command...>
   else
     echo "FAIL  $name"
     fail=$((fail + 1))
+    annotate "FAIL: $name" "$(cat "$OUT" 2> /dev/null)"
   fi
 }
 says() { grep -q -- "$1" "$OUT"; }

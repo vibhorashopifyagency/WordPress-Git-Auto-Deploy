@@ -50,7 +50,7 @@ jobs:
       # CHANGE: the live server's PHP version (cPanel -> MultiPHP Manager).
       PHP_VERSION: '8.2'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up PHP (same version as the live server)
         uses: shivammathur/setup-php@v2
