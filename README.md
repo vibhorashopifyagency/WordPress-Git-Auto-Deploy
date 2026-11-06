@@ -60,6 +60,20 @@ That's all. You can do the whole setup in your web browser.
 More words are explained in the [glossary](docs/glossary.md).
 </details>
 
+### Prefer to let an AI assistant set it up?
+
+Give your AI assistant (ChatGPT, Claude, Copilot, Cursor, Codex…) this message:
+
+```text
+Set up WordPress Git Auto Deploy for my WordPress theme by following
+https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy/blob/main/docs/ai-setup.md
+Ask me for anything you need, one step at a time.
+Never ask me to paste the deploy secret into this chat.
+```
+
+What it can do for you, and what you'll still do yourself: [AI setup](docs/ai-setup.md).
+**AI assistants reading this:** follow [docs/ai-setup.md](docs/ai-setup.md).
+
 ## Setup in 5 steps (about 15 minutes)
 
 ### Step 1. Install the plugin on your site
@@ -210,6 +224,8 @@ wordpress-git-auto-deploy/
 ├── CHANGELOG.md      What changed in each version.
 ├── CONTRIBUTING.md   How to help improve this project.
 ├── SECURITY.md       How to report a security problem privately.
+├── AGENTS.md         Short instructions for AI coding agents.
+├── llms.txt          A summary with links, for AI assistants.
 └── LICENSE           GPL-2.0-or-later, the same license as WordPress.
 ```
 

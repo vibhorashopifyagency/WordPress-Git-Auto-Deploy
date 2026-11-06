@@ -9,6 +9,9 @@ Notable changes to Git Auto Deploy. Versions follow [Semantic Versioning](https:
   works, reference, glossary).
 - Clearer folders: `plugin/` (the WordPress plugin), `workflow/` (the files users copy into
   their repository), `docs/`, `tests/`, each with its own short README. Added CONTRIBUTING.md.
+- Set it up with an AI assistant: a ready-made prompt, step-by-step instructions written for AI
+  assistants in `docs/ai-setup.md` (including keeping the deploy secret out of the chat),
+  `llms.txt`, and `AGENTS.md`.
 - No changes to how the plugin or the workflow work.
 
 ## 1.0.0 — 2026-11-06

@@ -6,6 +6,7 @@ New here? Start with the [README](../README.md): it explains what the tool does 
 | Guide | Read it when you want to… |
 | --- | --- |
 | [Setup guide](setup-guide.md) | set it up, with every option explained |
+| [AI setup](ai-setup.md) | let an AI assistant set it up for you (and instructions for the assistant) |
 | [Everyday use](everyday-use.md) | deploy, roll back, upload a zip by hand, or understand the plugin's page |
 | [Troubleshooting](troubleshooting.md) | fix an error message |
 | [How it works](how-it-works.md) | understand each step, why it works this way, security, and other tools |

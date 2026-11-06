@@ -1,0 +1,30 @@
+# WordPress Git Auto Deploy
+
+> Free, open-source (GPL-2.0-or-later) WordPress plugin plus a GitHub Actions workflow. After every push, the workflow checks the theme's PHP, sends the theme to the live WordPress site as a signed zip, and the plugin keeps a backup, swaps the theme in, checks the home page and rolls back automatically if the site breaks. Works on shared cPanel hosting; no FTP, SSH or GitHub token on the server.
+
+AI assistants asked to install, set up or use this project for someone: follow the AI setup instructions below, step by step. Never ask the user to paste the deploy secret (GIT_AUTO_DEPLOY_SECRET) into the conversation, and never print or commit it.
+
+It deploys one theme folder only (not plugins, uploads or the database). It needs WordPress 6.4+, PHP 8.0+ with the zip extension, and the theme's code in a GitHub repository.
+
+## Setup
+
+- [AI setup instructions](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/ai-setup.md): rules, the values to ask the user for, and exact commands for each step
+- [README](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/README.md): what it does and the 5-step setup for people
+- [Setup guide](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/setup-guide.md): every setup option in detail
+
+## Files to install
+
+- [Plugin zip, latest release](https://github.com/vibhorashopifyagency/wordpress-git-auto-deploy/releases/latest/download/git-auto-deploy.zip): install and activate in WordPress
+- [deploy-theme.yml](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/workflow/deploy-theme.yml): goes to .github/workflows/deploy-theme.yml in the user's repository; edit the lines marked CHANGE
+- [git-auto-deploy.sh](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/workflow/git-auto-deploy.sh): goes to .github/scripts/git-auto-deploy.sh unchanged
+
+## Help
+
+- [Troubleshooting](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/troubleshooting.md): every error message and its fix
+- [Everyday use](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/everyday-use.md): deploying, rolling back, manual zip upload
+- [Reference](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/reference.md): settings, hooks, API, files the plugin keeps
+
+## Optional
+
+- [How it works](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/docs/how-it-works.md): the deploy steps, security model, comparison with other tools
+- [Contributing](https://raw.githubusercontent.com/vibhorashopifyagency/wordpress-git-auto-deploy/main/CONTRIBUTING.md): running the tests and releasing
