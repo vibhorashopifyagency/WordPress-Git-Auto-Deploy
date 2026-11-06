@@ -20,7 +20,7 @@ jobs:
       matrix:
         php: ['8.0', '8.1', '8.2', '8.3', '8.4']
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -58,6 +58,10 @@ jobs:
       - name: Show logs
         if: failure()
         run: |
-          tail -n 50 tests/.work/server.log || true
-          tail -n 50 tests/.work/wordpress/debug.log || true
-          cat tests/.work/out.json || true
+          for f in tests/.work/server.log tests/.work/wordpress/debug.log tests/.work/out.json; do
+            [ -f "$f" ] || continue
+            echo "== $f"
+            tail -n 50 "$f"
+            msg="$(tail -c 1500 "$f" | sed -e 's/%/%25/g' -e 's/\r/%0D/g' | awk '{ printf "%s%%0A", $0 }')"
+            echo "::warning title=$f::$msg"
+          done
